@@ -79,6 +79,43 @@ with st.sidebar:
     st.caption("ML-powered transaction screening")
     st.divider()
 
+    # Dataset Insights
+    with st.expander("📊 Dataset Insights", expanded=False):
+        st.markdown("**PaySim Dataset**")
+        st.metric("Total Transactions", "6,362,620")
+        st.metric("Fraudulent",         "8,213 (0.13%)")
+        st.metric("Imbalance Ratio",    "774:1")
+        st.divider()
+        st.markdown("**Fraud by Type**")
+        st.markdown("""
+        | Type | Fraud Rate |
+        |------|-----------|
+        | TRANSFER | 0.31% 🔴 |
+        | CASH_OUT | 0.18% 🔴 |
+        | PAYMENT  | 0.00% ✅ |
+        | CASH_IN  | 0.00% ✅ |
+        | DEBIT    | 0.00% ✅ |
+        """)
+
+    # About
+    with st.expander("ℹ️ About", expanded=False):
+        st.markdown("""
+        **Model:** XGBoost (tuned)
+        
+        **Results:**
+        - ROC-AUC: 0.9998
+        - Recall:  0.9976
+        - F1:      0.9906
+        
+        **Pipeline:**
+        1. Feature engineering
+        2. SMOTE balancing
+        3. XGBoost + tuning
+        4. Cost-based threshold
+        """)
+
+    st.divider()
+
     if model_loaded:
         st.success("✅ Model loaded", icon="🤖")
         st.caption(f"Features: {len(feature_names)}")
@@ -103,14 +140,12 @@ with st.sidebar:
     st.markdown("**Model Info**")
     st.caption("Algorithm: XGBoost\nDataset: PaySim (6.3M transactions)\nFraud rate: ~0.13%")
 
+# ─── No tabs needed — content is in sidebar ───────────────────────────────────
+tab1, = st.tabs(["🔍 Transaction Screening"])
 
-# ─── Tabs ─────────────────────────────────────────────────────────────────────
-tab1, tab2, tab3 = st.tabs(["🔍 Transaction Screening", "📊 Dataset Insights", "ℹ️ About"])
 
-
-# ═══════════════════════════════════════════════════════════
 # TAB 1: TRANSACTION SCREENING
-# ═══════════════════════════════════════════════════════════
+
 with tab1:
     st.title("🔐 Transaction Fraud Screening")
     st.caption("Enter transaction details to get real-time fraud risk assessment")
