@@ -73,46 +73,18 @@ def load_model():
 model, feature_names, model_loaded = load_model()
 
 
-# ─── Sidebar ──────────────────────────────────────────────────────────────────
+# ─── Sidebar Navigation ───────────────────────────────────────────────────────
 with st.sidebar:
     st.title("🔐 FraudGuard AI")
     st.caption("ML-powered transaction screening")
     st.divider()
 
-    # Dataset Insights
-    with st.expander("📊 Dataset Insights", expanded=False):
-        st.markdown("**PaySim Dataset**")
-        st.metric("Total Transactions", "6,362,620")
-        st.metric("Fraudulent",         "8,213 (0.13%)")
-        st.metric("Imbalance Ratio",    "774:1")
-        st.divider()
-        st.markdown("**Fraud by Type**")
-        st.markdown("""
-        | Type | Fraud Rate |
-        |------|-----------|
-        | TRANSFER | 0.31% 🔴 |
-        | CASH_OUT | 0.18% 🔴 |
-        | PAYMENT  | 0.00% ✅ |
-        | CASH_IN  | 0.00% ✅ |
-        | DEBIT    | 0.00% ✅ |
-        """)
-
-    # About
-    with st.expander("ℹ️ About", expanded=False):
-        st.markdown("""
-        **Model:** XGBoost (tuned)
-        
-        **Results:**
-        - ROC-AUC: 0.9998
-        - Recall:  0.9976
-        - F1:      0.9906
-        
-        **Pipeline:**
-        1. Feature engineering
-        2. SMOTE balancing
-        3. XGBoost + tuning
-        4. Cost-based threshold
-        """)
+    # Navigation
+    page = st.radio(
+        "Navigate",
+        options=["🔍 Transaction Screening", "📊 Dataset Insights", "ℹ️ About"],
+        label_visibility="collapsed"
+    )
 
     st.divider()
 
@@ -120,7 +92,7 @@ with st.sidebar:
         st.success("✅ Model loaded", icon="🤖")
         st.caption(f"Features: {len(feature_names)}")
     else:
-        st.warning("⚠️ Demo Mode\nPlace fraud_model.pkl and feature_names.pkl in project folder")
+        st.warning("⚠️ Demo Mode\nPlace fraud_model.pkl and\nfeature_names.pkl in project folder")
 
     st.divider()
     st.markdown("**Decision Threshold**")
@@ -138,15 +110,13 @@ with st.sidebar:
 
     st.divider()
     st.markdown("**Model Info**")
-    st.caption("Algorithm: XGBoost\nDataset: PaySim (6.3M transactions)\nFraud rate: ~0.13%")
-
-# ─── No tabs needed — content is in sidebar ───────────────────────────────────
-tab1, = st.tabs(["🔍 Transaction Screening"])
+    st.caption("Algorithm: XGBoost\nDataset: PaySim (6.3M rows)\nFraud rate: ~0.13%")
 
 
-# TAB 1: TRANSACTION SCREENING
-
-with tab1:
+# ═══════════════════════════════════════════════════════════
+# PAGE 1: TRANSACTION SCREENING
+# ═══════════════════════════════════════════════════════════
+if page == "🔍 Transaction Screening":
     st.title("🔐 Transaction Fraud Screening")
     st.caption("Enter transaction details to get real-time fraud risk assessment")
 
@@ -203,7 +173,6 @@ with tab1:
             value=5_000.0, step=0.01, format="%.2f"
         )
 
-    # ── Analyse Button ─────────────────────────────────────────────────────────
     st.divider()
     _, btn_col, _ = st.columns([1, 1, 1])
     with btn_col:
@@ -213,7 +182,6 @@ with tab1:
     if analyse_clicked:
         with st.spinner("Running fraud analysis..."):
 
-            # Build feature vector matching Cell 6 pipeline exactly
             hour              = step % 24
             day               = step // 24
             is_night          = int((hour >= 22) or (hour <= 5))
@@ -271,7 +239,6 @@ with tab1:
                 if is_night:                              fraud_prob += 0.10
                 fraud_prob = min(fraud_prob, 0.99)
 
-        # ── Risk Verdict ────────────────────────────────────────────────────────
         risk_score_int = int(fraud_prob * 1000)
 
         if fraud_prob >= threshold:
@@ -302,7 +269,6 @@ with tab1:
         m3.metric("Risk Tier",         verdict)
         m4.metric("Threshold",         f"{threshold:.2f}")
 
-        # Gauge chart
         fig = go.Figure(go.Indicator(
             mode="gauge+number",
             value=fraud_prob * 100,
@@ -330,7 +296,6 @@ with tab1:
                           margin=dict(l=20, r=20, t=40, b=10))
         st.plotly_chart(fig, use_container_width=True)
 
-        # Risk factors
         st.markdown('<p class="section-header">🔎 Risk Factor Analysis</p>', unsafe_allow_html=True)
 
         factors = []
@@ -362,9 +327,9 @@ with tab1:
 
 
 # ═══════════════════════════════════════════════════════════
-# TAB 2: DATASET INSIGHTS
+# PAGE 2: DATASET INSIGHTS
 # ═══════════════════════════════════════════════════════════
-with tab2:
+elif page == "📊 Dataset Insights":
     st.title("📊 Dataset Insights")
     st.caption("PaySim — Synthetic mobile money transactions (6.3M rows)")
 
@@ -451,9 +416,9 @@ with tab2:
 
 
 # ═══════════════════════════════════════════════════════════
-# TAB 3: ABOUT
+# PAGE 3: ABOUT
 # ═══════════════════════════════════════════════════════════
-with tab3:
+elif page == "ℹ️ About":
     st.title("ℹ️ About This System")
 
     c1, c2 = st.columns(2)
