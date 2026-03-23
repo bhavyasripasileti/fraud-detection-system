@@ -137,23 +137,15 @@ if page == "🔍 Transaction Screening":
             value=5000.00, step=0.01, format="%.2f"
         )
 
-        col_h, col_d = st.columns(2)
-        with col_h:
-            hour_input = st.selectbox(
-                "Hour of Day",
-                options=list(range(24)),
-                index=14,
-                format_func=lambda x: f"{x:02d}:00"
-            )
-        with col_d:
-            day_input = st.number_input(
-                "Day of Month",
-                min_value=1, max_value=31,
-                value=10, step=1
-            )
+        hour_input = st.selectbox(
+            "Hour of Day",
+            options=list(range(24)),
+            index=14,
+            format_func=lambda x: f"{x:02d}:00"
+        )
 
-        step = (day_input - 1) * 24 + hour_input
-        st.caption(f"Time step: **{step}** | Transaction at **{hour_input:02d}:00** on day **{day_input}**")
+        step = hour_input
+        st.caption(f"Transaction at **{hour_input:02d}:00**")
 
     with col2:
         st.markdown('<p class="section-header">Account Balances</p>', unsafe_allow_html=True)
