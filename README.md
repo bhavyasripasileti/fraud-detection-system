@@ -6,7 +6,7 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red.svg)](https://streamlit.io)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **Live Demo** → [fraud-detection-demo.streamlit.app](https://your-app.streamlit.app)  
+> **Live app** → [fraud-detection-demo.streamlit.app](https://fraud-detection-system-5dkq5feuq4biqxad8xkmwu.streamlit.app)  
 > **Dataset** → [IEEE-CIS Fraud Detection (Kaggle)](https://www.kaggle.com/c/ieee-fraud-detection)
 
 ---
