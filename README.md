@@ -215,7 +215,7 @@ joblib>=1.2.0
 
 **[Your Name]**  
 BTech Computer Science | ML Engineering  
-[LinkedIn](https://linkedin.com) | [GitHub](https://github.com) | [Email](mailto:you@email.com)
+[LinkedIn](https://linkedin.com/in/bhavya-sri-pasileti-16565a2a1) | [GitHub](https://github.com//bhavyasripasileti) | [Email](mailto:bhavyasripasileti@gmail.com)
 
 ---
 
